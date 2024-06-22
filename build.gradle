@@ -1,0 +1,111 @@
+/*
+ * Copyright 2024 - present CommunityRadarGG <https://community-radar.de/>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+    }
+}
+
+plugins {
+    id "java"
+    id "idea"
+    id "org.cadixdev.licenser" version "0.6.1"
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+
+version = project.mod_version
+group = project.maven_group
+archivesBaseName = project.archives_base_name
+
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
+    options.encoding = "UTF-8"
+}
+
+minecraft {
+    mappings channel: 'snapshot', version: '20171003-1.12'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+        }
+
+        server {
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
+    implementation group: 'org.jetbrains', name: 'annotations', version: '24.1.0'
+}
+
+jar.finalizedBy('reobfJar')
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("mcmod.info") {
+        expand "version": project.version, "mcversion": project.mc_version
+    }
+}
+
+tasks.register('moveResources') {
+    doLast {
+        ant.move file: "${buildDir}/resources/main",
+                todir: "${buildDir}/classes/java"
+    }
+}
+
+moveResources.dependsOn(processResources)
+classes.dependsOn(moveResources)
+
+jar {
+    from("LICENSE") {
+        rename {
+            "${it}_${project.archives_base_name}"
+        }
+    }
+}
+
+license {
+    setNewLine(false)
+    header(project.file("HEADER"))
+    properties {
+        year = "2024 - present"
+        name = "CommunityRadarGG <https://community-radar.de/>"
+    }
+    tasks {
+        gradle {
+            files.from('build.gradle', 'settings.gradle', 'gradle.properties')
+        }
+    }
+}

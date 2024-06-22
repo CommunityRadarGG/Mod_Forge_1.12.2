@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    if: github.repository_owner == 'CommunityRadarGG'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 8
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Clean Build
+        run: ./gradlew clean build
+      - name: Extract Version from Gradle
+        run: |
+          version=$(./gradlew properties -q | grep "^version:" | awk '{print $2}')
+          echo "VERSION=$version" >> $GITHUB_ENV
+          echo $version
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: communityradar-${{ env.VERSION }}
+          path: build/libs/*-${{ env.VERSION }}.jar

@@ -1,0 +1,67 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+ij_any_spaces_within_brackets = false
+ij_any_block_comment_add_space = false
+ij_any_block_comment_at_first_column = false
+ij_any_line_comment_at_first_column = false
+ij_any_line_comment_add_space = true
+
+# noinspection all
+[.editorconfig]
+ij_editorconfig_spaces_around_assignment_operators = true
+ij_editorconfig_space_after_comma = false
+
+# noinspection all
+[*.java]
+ij_java_names_count_to_use_import_on_demand = 999999
+ij_java_class_count_to_use_import_on_demand = 999999
+ij_java_generate_final_parameters = true
+ij_continuation_indent_size = 8
+ij_java_doc_align_param_comments = false
+ij_java_doc_align_exception_comments = false
+ij_java_doc_add_blank_line_after_description = true
+ij_java_imports_layout = *,|,$*
+
+# noinspection all
+[{*.kt,*.kts}]
+ij_kotlin_name_count_to_use_star_import = 999999
+ij_kotlin_name_count_to_use_star_import_for_members = 999999
+ij_kotlin_imports_layout = *,java.**,javax.**,kotlin.**,^
+
+# noinspection all
+[{*.bash,*.sh,*.zsh}]
+indent_size = 2
+
+# noinspection all
+[{*.json,*.png.mcmeta,mcmod.info,pack.mcmeta}]
+ij_json_array_wrapping = split_into_lines
+ij_json_space_after_colon = true
+
+# noinspection all
+[{*.yaml,*.yml}]
+indent_size = 2
+
+# noinspection all
+[*.properties]
+ij_properties_keep_blank_lines = true
+
+# noinspection all
+[*.bat]
+end_of_line = crlf
+
+# noinspection all
+[*.patch]
+trim_trailing_whitespace = false
+
+# noinspection all
+[{*.markdown,*.md}]
+ij_markdown_max_lines_around_block_elements = 0
+ij_markdown_max_lines_around_header = 0
+ij_markdown_max_lines_between_paragraphs = 0
